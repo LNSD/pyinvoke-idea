@@ -1,1 +1,1 @@
-# intellij-pyinvoke
+# pyinvoke-idea

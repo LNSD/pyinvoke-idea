@@ -1,0 +1,63 @@
+plugins {
+    id 'idea'
+    id 'java'
+    id 'org.jetbrains.intellij' version '0.4.18'
+    id 'org.jetbrains.kotlin.jvm' version '1.3.72'
+    id 'org.jlleitschuh.gradle.ktlint' version '9.2.1'
+}
+
+group 'es.lnsd'
+version '1.0-SNAPSHOT'
+
+repositories {
+    jcenter()
+    mavenCentral()
+    maven { url "https://jitpack.io" }
+}
+
+dependencies {
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.6.2'
+}
+
+// See https://github.com/JetBrains/gradle-intellij-plugin/
+intellij {
+    version '2020.1'
+    type 'PC'
+    downloadSources true
+
+    //plugin dependencies, see https://github.com/JetBrains/gradle-intellij-plugin
+    plugins = ['python-ce']
+}
+patchPluginXml {
+    sinceBuild '192'
+    untilBuild '201.*'
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = '1.8'
+}
+compileTestKotlin {
+    kotlinOptions.jvmTarget = '1.8'
+}
+
+ktlint {
+    debug = true
+    verbose = true
+    reporters {
+        reporter "checkstyle"
+        reporter "plain"
+
+        customReporters {
+            "html" {
+                fileExtension = "html"
+                dependency = "me.cassiano:ktlint-html-reporter:0.2.3"
+            }
+        }
+    }
+}
+
+test {
+    useJUnitPlatform()
+}

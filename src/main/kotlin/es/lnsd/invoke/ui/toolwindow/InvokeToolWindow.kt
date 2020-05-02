@@ -1,20 +1,28 @@
 package es.lnsd.invoke.ui.toolwindow
 
 import com.intellij.openapi.actionSystem.ActionManager
+import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.DefaultActionGroup
 import com.intellij.openapi.ui.SimpleToolWindowPanel
+import com.intellij.openapi.wm.ToolWindow
 import com.intellij.ui.ScrollPaneFactory
 import com.intellij.ui.treeStructure.Tree
-import es.lnsd.invoke.ui.toolwindow.actions.UpdateTasksAction
+import es.lnsd.invoke.ui.toolwindow.tree.InvokeTreeCellRenderer
+import es.lnsd.invoke.ui.toolwindow.tree.ModulesRootNode
 import java.awt.GridLayout
 import javax.swing.JPanel
 import javax.swing.tree.DefaultTreeModel
 import javax.swing.tree.TreeNode
 import javax.swing.tree.TreeSelectionModel
 
-class InvokeToolWindow(treeRoot: TreeNode): SimpleToolWindowPanel(true){
+class InvokeToolWindow(toolWindow: ToolWindow): InvokeToolWindowContract.View {
 
-    private val tree = Tree(DefaultTreeModel(treeRoot))
+    val panel = SimpleToolWindowPanel(true)
+
+    private val toolbarPanel = JPanel(GridLayout())
+    private val tree = Tree(DefaultTreeModel(ModulesRootNode(emptyList())))
+    private val scrollPane = ScrollPaneFactory.createScrollPane(tree)
+    private val toolbarActionGroup = DefaultActionGroup()
 
     init {
         tree.apply {
@@ -22,25 +30,22 @@ class InvokeToolWindow(treeRoot: TreeNode): SimpleToolWindowPanel(true){
             cellRenderer = InvokeTreeCellRenderer()
             selectionModel.selectionMode = TreeSelectionModel.SINGLE_TREE_SELECTION
         }
-        add(ScrollPaneFactory.createScrollPane(tree))
+        panel.add(scrollPane)
 
-        val toolBarPanel = JPanel(GridLayout())
-        val actionGroup = DefaultActionGroup()
-        val updateTasksAction = UpdateTasksAction()
-        // updateTasksAction.apply {
-        //     registerCustomShortcutSet(CustomShortcutSet(KeyEvent.VK_F5), this)
-        // }
-        actionGroup.add(updateTasksAction)
-
-        toolBarPanel.add(
-            ActionManager.getInstance().createActionToolbar("InvokeToolWindowToolbar", actionGroup, true).component
+        toolbarPanel.add(
+            ActionManager.getInstance().createActionToolbar("InvokeToolWindowToolbar", toolbarActionGroup, true).component
         )
-        toolbar = toolBarPanel
+        panel.toolbar = toolbarPanel
+        toolWindow.component.add(panel)
     }
 
-    fun update(treeRoot: TreeNode) {
-        val model = tree.model as DefaultTreeModel
-        model.setRoot(treeRoot)
-        model.reload()
+    override fun updateTreeModel(root: TreeNode) {
+        val treeModel = tree.model as DefaultTreeModel
+        treeModel.setRoot(root)
+        treeModel.reload()
+    }
+
+    override fun registerToolbarActions(vararg actions: AnAction) {
+        actions.forEach { action -> toolbarActionGroup.add(action) }
     }
 }

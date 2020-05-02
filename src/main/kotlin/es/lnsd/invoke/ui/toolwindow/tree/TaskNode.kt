@@ -1,7 +1,9 @@
-package es.lnsd.invoke.ui.toolwindow
+package es.lnsd.invoke.ui.toolwindow.tree
 
 import es.lnsd.invoke.InvokeToolWindowTaskIcon
 import es.lnsd.invoke.Task
+import es.lnsd.invoke.ui.toolwindow.tree.InvokeTreeNode
+import es.lnsd.invoke.ui.toolwindow.tree.ModuleNode
 import java.util.Collections.emptyEnumeration
 import java.util.Enumeration
 import javax.swing.Icon

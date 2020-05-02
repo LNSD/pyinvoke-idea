@@ -1,4 +1,4 @@
-package es.lnsd.invoke.ui.toolwindow
+package es.lnsd.invoke.ui.toolwindow.tree
 
 import com.intellij.ui.ColoredTreeCellRenderer
 import javax.swing.JTree

@@ -1,4 +1,4 @@
-package es.lnsd.invoke.ui.toolwindow
+package es.lnsd.invoke.ui.toolwindow.tree
 
 import javax.swing.Icon
 import javax.swing.tree.TreeNode

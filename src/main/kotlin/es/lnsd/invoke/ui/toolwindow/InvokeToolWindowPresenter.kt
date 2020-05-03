@@ -11,7 +11,6 @@ import es.lnsd.invoke.parseTasks
 import es.lnsd.invoke.runInvoke
 import es.lnsd.invoke.ui.toolwindow.tree.ModuleNode
 import es.lnsd.invoke.ui.toolwindow.tree.ModulesRootNode
-import es.lnsd.invoke.ui.toolwindow.tree.TaskNode
 import java.awt.event.KeyEvent
 
 class InvokeToolWindowPresenter(private val view: InvokeToolWindow, private val project: Project):
@@ -29,8 +28,8 @@ class InvokeToolWindowPresenter(private val view: InvokeToolWindow, private val 
         ApplicationManager.getApplication().executeOnPooledThread {
             val modules = project.modules.map { mod ->
                 val out = runInvoke(mod, "--list", "--list-format=json")
-                val tasks = parseTasks(out).tasks
-                ModuleNode(mod, tasks.map(::TaskNode))
+                val tasks = parseTasks(out)
+                ModuleNode(mod.name, tasks)
             }
             view.updateTreeModel(ModulesRootNode(modules))
         }

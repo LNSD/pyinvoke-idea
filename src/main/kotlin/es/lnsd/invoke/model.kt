@@ -3,12 +3,12 @@ package es.lnsd.invoke
 import com.google.gson.Gson
 
 
-data class InvokeTasks(
-    @JvmField val name: String,
-    @JvmField val help: String,
+data class TasksCollection(
+    @JvmField val name: String?,
+    @JvmField val help: String?,
     @JvmField val default: String,
     @JvmField val tasks: List<Task>,
-    @JvmField val collections: List<InvokeTasks>
+    @JvmField val collections: List<TasksCollection>
 )
 
 data class Task(
@@ -19,4 +19,4 @@ data class Task(
 
 private val gson by lazy { Gson() }
 
-fun parseTasks(tasks: String): InvokeTasks = gson.fromJson(tasks, InvokeTasks::class.java)
+fun parseTasks(tasks: String): TasksCollection = gson.fromJson(tasks, TasksCollection::class.java)
